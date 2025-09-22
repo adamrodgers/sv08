@@ -87,16 +87,28 @@ CPUAffinity=3
 
 ## Step 4: Apply Changes
 
+Reload systemd configuration:
 ```bash
-# Reload systemd configuration
 sudo systemctl daemon-reload
+```
 
-# Restart services to apply new CPU affinity
+Restart Klipper service:
+```bash
 sudo systemctl restart klipper.service
-sudo systemctl restart moonraker.service
-sudo systemctl restart crowsnest.service
+```
 
-# Reboot for clean application (recommended)
+Restart Moonraker service:
+```bash
+sudo systemctl restart moonraker.service
+```
+
+Restart Crowsnest service:
+```bash
+sudo systemctl restart crowsnest.service
+```
+
+Reboot for clean application (recommended):
+```bash
 sudo reboot
 ```
 
@@ -105,9 +117,14 @@ sudo reboot
 ## Verification
 
 ### Check CPU Affinity
+View your processes:
 ```bash
-# View processes and their CPU affinity
-ps -hU $(whoami); echo "--- CPU Affinities ---"; ps -hU $(whoami) | awk '{print $1}' | xargs -I{} taskset -c -p {}
+ps -hU $(whoami)
+```
+
+Show CPU affinity for each process:
+```bash
+ps -hU $(whoami) | awk '{print $1}' | xargs -I{} taskset -c -p {}
 ```
 
 ### Expected Output
@@ -123,38 +140,49 @@ pid 614's current affinity list: 2        # Moonraker on core 2 ✓
 pid 605's current affinity list: 2        # Crowsnest on core 2 ✓
 ```
 
-### Monitor Real-Time Usage
+Monitor real-time CPU usage:
 ```bash
 htop
-# Press 'F2' → Display options → Check "Detailed CPU time"
-# Core 3 should show primarily Klipper activity
 ```
+Press 'F2' → Display options → Check "Detailed CPU time". Core 3 should show primarily Klipper activity.
 
 ---
 
 ## Troubleshooting
 
 ### Check Service Status
+Check service status:
 ```bash
 sudo systemctl status klipper.service
+```
+
+View recent logs:
+```bash
 journalctl -u klipper.service -n 20
 ```
 
 ### Verify Configuration
+Check override files exist:
 ```bash
-# Check override files exist
 ls -la /etc/systemd/system/klipper.service.d/
+```
+
+Check effective configuration:
+```bash
 systemctl show klipper.service | grep CPUAffinity
 ```
 
 ### Reset Configuration
+Remove override files:
 ```bash
-# Remove override files
 sudo rm /etc/systemd/system/klipper.service.d/override.conf
 sudo rm /etc/systemd/system/moonraker.service.d/override.conf  
 sudo rm /etc/systemd/system/crowsnest.service.d/override.conf
 sudo rm /etc/systemd/system.conf.d/cpuaffinity.conf
+```
 
+Reload and restart:
+```bash
 sudo systemctl daemon-reload
 sudo systemctl restart klipper moonraker crowsnest
 ```
