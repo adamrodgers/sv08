@@ -31,11 +31,13 @@ CPU affinity assigns specific processes to dedicated CPU cores, reducing context
 
 **Purpose**: Configures all system services to use cores 0-1, reserving cores 2-3 for printer services.
 
+Create the system configuration directory:
 ```bash
-# Create the system configuration directory
 sudo mkdir -p /etc/systemd/system.conf.d
+```
 
-# Set default CPU affinity for all services to cores 0-1
+Set default CPU affinity for all services to cores 0-1:
+```bash
 cat << EOF | sudo tee /etc/systemd/system.conf.d/cpuaffinity.conf
 [Manager]
 CPUAffinity=0-1
@@ -48,19 +50,13 @@ EOF
 
 **Purpose**: Assigns webcam streaming and API services to core 2. These I/O-bound services can share a core since they rarely peak simultaneously.
 
+Configure Crowsnest CPU affinity:
 ```bash
-# Configure Crowsnest CPU affinity
 sudo systemctl edit crowsnest.service
 ```
 
-Add and save:
-```ini
-[Service]
-CPUAffinity=2
-```
-
-```bash
-# Configure Moonraker CPU affinity  
+Configure Moonraker CPU affinity:
+```bash  
 sudo systemctl edit moonraker.service
 ```
 
@@ -76,8 +72,8 @@ CPUAffinity=2
 
 **Purpose**: Gives Klipper exclusive access to core 3. Real-time motion control requires uninterrupted CPU time to prevent print defects and timing issues.
 
+Configure Klipper CPU affinity:
 ```bash
-# Configure Klipper CPU affinity
 sudo systemctl edit klipper.service
 ```
 
@@ -118,57 +114,57 @@ ps -hU $(whoami); echo "--- CPU Affinities ---"; ps -hU $(whoami) | awk '{print 
 ```
 --- Process List ---
   613 Ssl    2:05 /home/biqu/klippy-env/bin/python /home/biqu/klipper/klippy/klippy.py
-    614 Ssl    0:48 /home/biqu/moonraker-env/bin/python -m moonraker  
-      605 Ss     0:00 /bin/bash /usr/local/bin/crowsnest
+  614 Ssl    0:48 /home/biqu/moonraker-env/bin/python -m moonraker  
+  605 Ss     0:00 /bin/bash /usr/local/bin/crowsnest
 
-      --- CPU Affinities ---  
-      pid 613's current affinity list: 3        # Klipper on core 3 ✓
-      pid 614's current affinity list: 2        # Moonraker on core 2 ✓  
-      pid 605's current affinity list: 2        # Crowsnest on core 2 ✓
-      ```
+--- CPU Affinities ---  
+pid 613's current affinity list: 3        # Klipper on core 3 ✓
+pid 614's current affinity list: 2        # Moonraker on core 2 ✓  
+pid 605's current affinity list: 2        # Crowsnest on core 2 ✓
+```
 
-      ### Monitor Real-Time Usage
-      ```bash
-      htop
-      # Press 'F2' → Display options → Check "Detailed CPU time"
-      # Core 3 should show primarily Klipper activity
-      ```
+### Monitor Real-Time Usage
+```bash
+htop
+# Press 'F2' → Display options → Check "Detailed CPU time"
+# Core 3 should show primarily Klipper activity
+```
 
-      ---
+---
 
-      ## Troubleshooting
+## Troubleshooting
 
-      ### Check Service Status
-      ```bash
-      sudo systemctl status klipper.service
-      journalctl -u klipper.service -n 20
-      ```
+### Check Service Status
+```bash
+sudo systemctl status klipper.service
+journalctl -u klipper.service -n 20
+```
 
-      ### Verify Configuration
-      ```bash
-      # Check override files exist
-      ls -la /etc/systemd/system/klipper.service.d/
-      systemctl show klipper.service | grep CPUAffinity
-      ```
+### Verify Configuration
+```bash
+# Check override files exist
+ls -la /etc/systemd/system/klipper.service.d/
+systemctl show klipper.service | grep CPUAffinity
+```
 
-      ### Reset Configuration
-      ```bash
-      # Remove override files
-      sudo rm /etc/systemd/system/klipper.service.d/override.conf
-      sudo rm /etc/systemd/system/moonraker.service.d/override.conf  
-      sudo rm /etc/systemd/system/crowsnest.service.d/override.conf
-      sudo rm /etc/systemd/system.conf.d/cpuaffinity.conf
+### Reset Configuration
+```bash
+# Remove override files
+sudo rm /etc/systemd/system/klipper.service.d/override.conf
+sudo rm /etc/systemd/system/moonraker.service.d/override.conf  
+sudo rm /etc/systemd/system/crowsnest.service.d/override.conf
+sudo rm /etc/systemd/system.conf.d/cpuaffinity.conf
 
-      sudo systemctl daemon-reload
-      sudo systemctl restart klipper moonraker crowsnest
-      ```
+sudo systemctl daemon-reload
+sudo systemctl restart klipper moonraker crowsnest
+```
 
-      ---
+---
 
-      ## Expected Benefits
+## Expected Benefits
 
-      - **Possibly smoother prints**: May reduce layer inconsistencies and improve surface finish
-      - **Potentially higher reliable speeds**: Could reduce timing-related failures at high speeds  
-      - **Stable webcam streams**: Consistent frame rates during printing
-      - **Better system responsiveness**: Improved resource utilization across cores
-      - **May resolve TTC errors**: Could fix "Timer Too Close" errors from system overload
+- **Possibly smoother prints**: May reduce layer inconsistencies and improve surface finish
+- **Potentially higher reliable speeds**: Could reduce timing-related failures at high speeds  
+- **Stable webcam streams**: Consistent frame rates during printing
+- **Better system responsiveness**: Improved resource utilization across cores
+- **May resolve TTC errors**: Could fix "Timer Too Close" errors from system overload
