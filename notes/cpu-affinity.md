@@ -55,6 +55,12 @@ Configure Crowsnest CPU affinity:
 sudo systemctl edit crowsnest.service
 ```
 
+Add and save:
+```ini
+[Service]
+CPUAffinity=2
+```
+
 Configure Moonraker CPU affinity:
 ```bash  
 sudo systemctl edit moonraker.service
