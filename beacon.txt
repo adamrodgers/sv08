@@ -1,0 +1,190 @@
+8:06 PM  _CLIENT_LINEAR_MOVE Z=25 F=1500
+8:06 PM  _CLIENT_LINEAR_MOVE Z=25 F=1500
+8:06 PM  _CLIENT_LINEAR_MOVE Z=25 F=1500
+8:06 PM  _CLIENT_LINEAR_MOVE Z=25 F=1500
+8:06 PM  _CLIENT_LINEAR_MOVE Z=25 F=1500
+8:06 PM  _CLIENT_LINEAR_MOVE Z=25 F=1500
+8:06 PM  SET_KINEMATIC_POSITION X=0 Y=0 Z=0
+8:06 PM  Must home axis first: 175.000 175.500 355.020 [0.000]
+8:06 PM  Must home axis first: 175.000 175.500 355.020 [0.000]
+8:06 PM  _CLIENT_LINEAR_MOVE Z=25 F=1500
+8:06 PM  G91
+8:06 PM  Must home axis first: 175.000 175.500 355.020 [0.000]
+8:06 PM  Must home axis first: 175.000 175.500 355.020 [0.000]
+8:06 PM  _CLIENT_LINEAR_MOVE Z=25 F=1500
+8:06 PM  Error during homing contact: No trigger on probe after full movement
+8:06 PM  Collecting sample 1/3
+8:06 PM  Initial approach
+8:05 PM  G28
+8:05 PM  Must home X and Y axes before homing Z
+8:05 PM  G28 Z
+7:54 PM  STATUS: Nevermore fans turned off
+7:44 PM  Sample spread too large(0.0094 > 0.0080)
+7:44 PM  Collecting sample 3/3
+7:44 PM  Collecting sample 2/3
+7:43 PM  Collecting sample 1/3
+7:43 PM  Initial approach
+7:43 PM  Sample spread too large(0.0097 > 0.0080), restarting
+7:43 PM  Collecting sample 3/3
+7:43 PM  Collecting sample 2/3
+7:43 PM  Collecting sample 1/3
+7:43 PM  Initial approach
+7:43 PM  Sample spread too large(0.0095 > 0.0080), restarting
+7:43 PM  Collecting sample 3/3
+7:43 PM  Collecting sample 2/3
+7:43 PM  Collecting sample 1/3
+7:43 PM  Initial approach
+7:43 PM  Sample spread too large(0.0100 > 0.0080), restarting
+7:43 PM  Collecting sample 3/3
+7:43 PM  Collecting sample 2/3
+7:43 PM  Collecting sample 1/3
+7:43 PM  Initial approach
+7:43 PM  Sample spread too large(0.0100 > 0.0080), restarting
+7:43 PM  Collecting sample 3/3
+7:43 PM  Collecting sample 2/3
+7:43 PM  Collecting sample 1/3
+7:43 PM  Initial approach
+7:43 PM  Sample spread too large(0.0092 > 0.0080), restarting
+7:43 PM  Collecting sample 3/3
+7:43 PM  Collecting sample 2/3
+7:43 PM  Collecting sample 1/3
+7:42 PM  Initial approach
+7:42 PM  Sample spread too large(0.0098 > 0.0080), restarting
+7:42 PM  Collecting sample 3/3
+7:42 PM  Collecting sample 2/3
+7:42 PM  Collecting sample 1/3
+7:42 PM  Initial approach
+7:42 PM  Sample spread too large(0.0100 > 0.0080), restarting
+7:42 PM  Collecting sample 3/3
+7:42 PM  Collecting sample 2/3
+7:42 PM  Collecting sample 1/3
+7:42 PM  Initial approach
+7:42 PM  Sample spread too large(0.0097 > 0.0080), restarting
+7:42 PM  Collecting sample 3/3
+7:42 PM  Collecting sample 2/3
+7:42 PM  Collecting sample 1/3
+7:42 PM  Initial approach
+7:42 PM  Sample spread too large(0.0098 > 0.0080), restarting
+7:42 PM  Collecting sample 3/3
+7:42 PM  Collecting sample 2/3
+7:42 PM  Collecting sample 1/3
+7:42 PM  Initial approach
+7:42 PM  Sample spread too large(0.0098 > 0.0080), restarting
+7:42 PM  Collecting sample 3/3
+7:42 PM  Collecting sample 2/3
+7:42 PM  Collecting sample 1/3
+7:42 PM  Initial approach
+7:41 PM  G28
+7:41 PM  Klipper state: Disconnect
+7:41 PM  FIRMWARE_RESTART
+7:41 PM  Must home axis first: 175.000 175.500 342.424 [0.000]
+7:41 PM  BEACON_ESTIMATE_BACKLASH
+7:40 PM  Must home axis first: 175.000 175.500 2.000 [0.000]
+7:40 PM  PROBE_ACCURACY at X:175.000 Y:175.500 Z:341.424 (samples=10 retract=0.000 speed=2.0 lift_speed=4.0)
+7:40 PM  PROBE_ACCURACY
+7:40 PM  Last reading: 5299812.44Hz, 37.90C, 1.97459mm
+7:40 PM  BEACON_QUERY
+7:40 PM  Sample spread too large(0.0159 > 0.0080)
+7:40 PM  Collecting sample 3/3
+7:40 PM  Collecting sample 2/3
+7:40 PM  Collecting sample 1/3
+7:40 PM  Initial approach
+7:40 PM  Sample spread too large(0.0082 > 0.0080), restarting
+7:39 PM  Collecting sample 2/3
+7:39 PM  Collecting sample 1/3
+7:39 PM  Initial approach
+7:39 PM  Sample spread too large(0.0166 > 0.0080), restarting
+7:39 PM  Collecting sample 3/3
+7:39 PM  Collecting sample 2/3
+7:39 PM  Collecting sample 1/3
+7:39 PM  Initial approach
+7:39 PM  Sample spread too large(0.0082 > 0.0080), restarting
+7:39 PM  Collecting sample 2/3
+7:39 PM  Collecting sample 1/3
+7:39 PM  Initial approach
+7:39 PM  Sample spread too large(0.0082 > 0.0080), restarting
+7:39 PM  Collecting sample 2/3
+7:39 PM  Collecting sample 1/3
+7:39 PM  Initial approach
+7:39 PM  Sample spread too large(0.0158 > 0.0080), restarting
+7:39 PM  Collecting sample 3/3
+7:39 PM  Collecting sample 2/3
+7:39 PM  Collecting sample 1/3
+7:39 PM  Initial approach
+7:39 PM  Sample spread too large(0.0166 > 0.0080), restarting
+7:39 PM  Collecting sample 3/3
+7:39 PM  Collecting sample 2/3
+7:39 PM  Collecting sample 1/3
+7:39 PM  Initial approach
+7:39 PM  Sample spread too large(0.0161 > 0.0080), restarting
+7:39 PM  Collecting sample 3/3
+7:38 PM  Collecting sample 2/3
+7:38 PM  Collecting sample 1/3
+7:38 PM  Initial approach
+7:38 PM  Sample spread too large(0.0082 > 0.0080), restarting
+7:38 PM  Collecting sample 2/3
+7:38 PM  Collecting sample 1/3
+7:38 PM  Initial approach
+7:38 PM  Sample spread too large(0.0167 > 0.0080), restarting
+7:38 PM  Collecting sample 3/3
+7:38 PM  Collecting sample 2/3
+7:38 PM  Collecting sample 1/3
+7:38 PM  Initial approach
+7:38 PM  Sample spread too large(0.0141 > 0.0080), restarting
+7:38 PM  Collecting sample 3/3
+7:38 PM  Collecting sample 2/3
+7:38 PM  Collecting sample 1/3
+7:38 PM  Initial approach
+7:38 PM  G28
+7:37 PM  FIRMWARE_RESTART
+7:37 PM  Klipper state: Disconnect
+7:36 PM  SAVE_CONFIG
+7:36 PM  Beacon calibrated at 175.000,131.500 from 0.200 to 5.000, speed 1.00 mm/s, temp 37.56C
+7:36 PM  Beacon calibration for model 'default' has been updated
+for the current session. The SAVE_CONFIG command will
+update the printer config file and restart the printer.
+7:36 PM  Beacon calibration starting
+7:36 PM  ACCEPT
+7:36 PM  Z position: -0.150 --> -0.140 <-- -0.099
+7:36 PM  TESTZ Z=0.01
+7:36 PM  Z position: -0.199 --> -0.150 <-- -0.099
+7:36 PM  TESTZ Z=-0.05
+7:35 PM  Z position: -0.199 --> -0.099 <-- 0.000
+7:35 PM  TESTZ Z=-0.1
+7:35 PM  Z position: -0.099 --> 0.000 <-- 0.501
+7:35 PM  TESTZ Z=0.1
+7:35 PM  Z position: -0.199 --> -0.099 <-- 0.501
+7:35 PM  TESTZ Z=0.1
+7:35 PM  Z position: -0.299 --> -0.199 <-- 0.501
+7:35 PM  TESTZ Z=0.1
+7:35 PM  Z position: -0.399 --> -0.299 <-- 0.501
+7:35 PM  TESTZ Z=0.1
+7:34 PM  Z position: -0.499 --> -0.399 <-- 0.501
+7:34 PM  TESTZ Z=0.1
+7:34 PM  Z position: ?????? --> -0.499 <-- 0.501
+7:34 PM  TESTZ Z=-1
+7:34 PM  Z position: ?????? --> 0.501 <-- 1.501
+7:34 PM  TESTZ Z=-1
+7:34 PM  Z position: ?????? --> 1.501 <-- 2.501
+7:34 PM  TESTZ Z=-1
+7:34 PM  Z position: ?????? --> 2.501 <-- 3.501
+7:34 PM  TESTZ Z=-1
+7:34 PM  Z position: ?????? --> 3.501 <-- 4.500
+7:34 PM  TESTZ Z=-1
+7:34 PM  Z position: ?????? --> 4.500 <-- 5.500
+7:34 PM  TESTZ Z=-1
+7:34 PM  Z position: ?????? --> 5.500 <-- 6.500
+7:34 PM  TESTZ Z=-1
+7:34 PM  Z position: ?????? --> 6.500 <-- 7.500
+7:34 PM  TESTZ Z=-1
+7:34 PM  Z position: ?????? --> 7.500 <-- ??????
+7:34 PM  Starting manual Z probe. Use TESTZ to adjust position. Finish with ACCEPT or ABORT command.
+7:34 PM  BEACON_CALIBRATE
+7:33 PM  Beacon calibrated at 175.000,153.500 from 0.200 to 5.000, speed 1.00 mm/s, temp 37.70C
+7:33 PM  Beacon calibration starting
+7:33 PM  Collected 3 samples, 0.0059 sd
+7:33 PM  Collecting sample 3/3
+7:33 PM  Collecting sample 2/3
+7:33 PM  Collecting sample 1/3
+7:33 PM  Initial approach
+7:33 PM  G28
