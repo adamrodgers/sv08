@@ -2,18 +2,19 @@
 
 ## Overview
 
-CPU affinity assigns specific processes to dedicated CPU cores, reducing context switching and improving real-time performance for 3D printing. This guide optimizes 4-core systems by dedicating cores to specific services.
+CPU affinity assigns specific processes to dedicated CPU cores, reducing context switching and improving real-time performance for 3D printing. This guide optimizes 4-core systems by dedicating two cores exclusively to Klipper for maximum motion control performance.
 
 ### Core Assignment Strategy
-- **Cores 0-1**: General system services and background processes
-- **Core 2**: Crowsnest (webcam streaming) and Moonraker (API server)
-- **Core 3**: Klipper (real-time motion control) - **dedicated core**
+- **Core 0**: General system services and background processes
+- **Core 1**: Crowsnest (webcam streaming) and Moonraker (API server)
+- **Cores 2-3**: Klipper (real-time motion control) - **two dedicated cores**
 
 ### Why This Matters
-- **Reduces jitter**: Klipper gets uninterrupted CPU time for precise motion control
-- **May improve print quality**: Less interference during critical operations
+- **Minimizes jitter**: Klipper gets two uninterrupted cores for precise motion control
+- **May improve print quality**: Less interference during critical operations with dual-core processing power
 - **Better system stability**: Prevents resource contention between services
 - **May resolve TTC errors**: Could fix "Timer Too Close" errors caused by system overload
+- **Headroom for complex kinematics**: Input shaping and advanced features have dedicated compute resources
 
 **Note: This configuration requires more real-world testing to confirm all benefits, but early results suggest significant improvements in system performance and reliability.**
 
@@ -29,26 +30,26 @@ CPU affinity assigns specific processes to dedicated CPU cores, reducing context
 
 ## Step 1: Set System-Wide CPU Affinity
 
-**Purpose**: Configures all system services to use cores 0-1, reserving cores 2-3 for printer services.
+**Purpose**: Configures all system services to use core 0 only, leaving cores 1-3 available for printer services.
 
 Create the system configuration directory:
 ```bash
 sudo mkdir -p /etc/systemd/system.conf.d
 ```
 
-Set default CPU affinity for all services to cores 0-1:
+Set default CPU affinity for all services to core 0:
 ```bash
 cat << EOF | sudo tee /etc/systemd/system.conf.d/cpuaffinity.conf
 [Manager]
-CPUAffinity=0-1
+CPUAffinity=0
 EOF
 ```
 
 ---
 
-## Step 2: Configure Crowsnest and Moonraker (Core 2)
+## Step 2: Configure Crowsnest and Moonraker (Core 1)
 
-**Purpose**: Assigns webcam streaming and API services to core 2. These I/O-bound services can share a core since they rarely peak simultaneously.
+**Purpose**: Assigns webcam streaming and API services to core 1. These I/O-bound services can share a core since they rarely peak simultaneously.
 
 Configure Crowsnest CPU affinity:
 ```bash
@@ -58,7 +59,7 @@ sudo systemctl edit crowsnest.service
 Add and save:
 ```ini
 [Service]
-CPUAffinity=2
+CPUAffinity=1
 ```
 
 Configure Moonraker CPU affinity:
@@ -69,14 +70,14 @@ sudo systemctl edit moonraker.service
 Add and save:
 ```ini
 [Service]
-CPUAffinity=2
+CPUAffinity=1
 ```
 
 ---
 
-## Step 3: Configure Klipper (Core 3)
+## Step 3: Configure Klipper (Cores 2-3)
 
-**Purpose**: Gives Klipper exclusive access to core 3. Real-time motion control requires uninterrupted CPU time to prevent print defects and timing issues.
+**Purpose**: Gives Klipper exclusive access to cores 2-3. Real-time motion control requires uninterrupted CPU time to prevent print defects and timing issues. Two dedicated cores provide maximum processing power for input shaping, pressure advance, and complex kinematics calculations.
 
 Configure Klipper CPU affinity:
 ```bash
@@ -86,7 +87,7 @@ sudo systemctl edit klipper.service
 Add and save:
 ```ini
 [Service]
-CPUAffinity=3
+CPUAffinity=2-3
 ```
 
 ---
@@ -141,16 +142,16 @@ ps -hU $(whoami) | awk '{print $1}' | xargs -I{} taskset -c -p {}
   605 Ss     0:00 /bin/bash /usr/local/bin/crowsnest
 
 --- CPU Affinities ---  
-pid 613's current affinity list: 3        # Klipper on core 3 ✓
-pid 614's current affinity list: 2        # Moonraker on core 2 ✓  
-pid 605's current affinity list: 2        # Crowsnest on core 2 ✓
+pid 613's current affinity list: 2,3      # Klipper on cores 2-3 ✓
+pid 614's current affinity list: 1        # Moonraker on core 1 ✓  
+pid 605's current affinity list: 1        # Crowsnest on core 1 ✓
 ```
 
 Monitor real-time CPU usage:
 ```bash
 htop
 ```
-Press 'F2' → Display options → Check "Detailed CPU time". Core 3 should show primarily Klipper activity.
+Press 'F2' → Display options → Check "Detailed CPU time". Cores 2-3 should show primarily Klipper activity, core 1 should show Moonraker/Crowsnest, and core 0 should show system processes.
 
 ---
 
@@ -198,7 +199,8 @@ sudo systemctl restart klipper moonraker crowsnest
 ## Expected Benefits
 
 - **Possibly smoother prints**: May reduce layer inconsistencies and improve surface finish
-- **Potentially higher reliable speeds**: Could reduce timing-related failures at high speeds  
-- **Stable webcam streams**: Consistent frame rates during printing
-- **Better system responsiveness**: Improved resource utilization across cores
+- **Potentially higher reliable speeds**: Could reduce timing-related failures at high speeds with dual-core processing
+- **Better input shaping performance**: More CPU headroom for advanced motion algorithms
+- **Stable webcam streams**: Consistent frame rates during printing on dedicated core
+- **Better system responsiveness**: Improved resource utilization with isolated services
 - **May resolve TTC errors**: Could fix "Timer Too Close" errors from system overload
