@@ -14,7 +14,6 @@ CPU affinity assigns specific processes to dedicated CPU cores, reducing context
 - **Better system stability**: Klipper isolated from system service contention
 - **May resolve TTC errors**: Could fix "Timer Too Close" errors caused by CPU scheduling delays
 - **Headroom for complex kinematics**: Input shaping and advanced features have dedicated compute resources
-- **Simpler than full pinning**: Avoids bottlenecking system services on a single core
 
 **Note: This configuration requires more real-world testing to confirm all benefits, but early results suggest improvements in system performance and reliability.**
 
