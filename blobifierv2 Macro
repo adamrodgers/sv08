@@ -1,0 +1,81 @@
+```[gcode_macro BLOBIFIERV2]
+description: Blob filament and hopefully kick it into the bucket.
+
+gcode:
+  ## Steal some variables from AFC
+  {% set gVars                  = printer['gcode_macro _AFC_GLOBAL_VARS'] %}
+  {% set travel_speed           = gVars['travel_speed']     | default(120)*60   | float %}
+  {% set z_travel_speed         = gVars['z_travel_speed']   | default(30)*60    | float %}
+  {% set verbose                = gVars['verbose']          | default(1)        | int %}
+  {% set vars                   = printer['gcode_macro _AFC_POOP_VARS'] %}
+  {% set purge_x, purge_y       = vars.purge_loc_xy         | default([-1,-1])  | map('float') %}
+  {% set purge_spd              = vars['purge_spd']         | default(6.5)*60   | float %}
+  {% set z_poop                 = vars['z_purge_move']      | default(true)     | lower == 'true' %}
+  {% set fast_z                 = vars['fast_z']            | default(200)*60   | float %}
+  {% set z_lift                 = vars['z_lift']            | default(10)       | float %}
+  {% set part_cooling_fan       = vars['part_cooling_fan']  | default(true)     | lower == 'true' %}
+  {% set part_cooling_fan_speed = vars['part_cooling_fan_speed']| default(1.0)  | float %}
+  {% set purge_cool_time        = vars['purge_cool_time']   | default(2)*1000   | float %}
+  {% set purge_length           = vars['purge_length']      | default(75.000)   | float %}
+  {% set purge_length_minimum   = vars['purge_length_minimum']| default(75.000) | float %}
+  {% set purge_start            = vars['purge_start']       | default(0.6)      | float %}
+  {% set restore_position       = vars['restore_position']  | default(true)     | lower == 'true' %}
+
+  {% if verbose > 0 %}
+    RESPOND TYPE=command MSG='BLOBIFIERv2: Starting Blobbing'
+  {% endif %}
+
+  SAVE_GCODE_STATE NAME=_AFC_POOPING
+
+  # Set Servo To Extended Position
+  SET_SERVO SERVO=blobs ANGLE=170
+
+  # Save Original Fan Speed To Restore At End Of Print
+  {% set backup_fan_speed = printer.fan.speed %}
+     
+  # Forced Purge length 75mm, Length from top of cutter to bottom of nozzle
+  {% set purge_len = 75 %}
+  
+  G90
+
+  AFC_DISABLE_SKEW
+
+  RESPOND TYPE=command MSG='BLOBIFIERv2: Move To Purge Location X{purge_x} Y{purge_y}'
+  G1 X{purge_x} Y{purge_y} F{travel_speed}
+  M400 # Wait for the move to complete
+
+  # Forced Max Purge Amount Is 25mm, making 3 blobs
+  {% set max_iteration_length = 25 %}
+  {% set iterations = (purge_len / max_iteration_length)|round(0, 'ceil')|int %}
+
+  RESPOND TYPE=command MSG='BLOBIFIERv2: Will Do {iterations} purges of {max_iteration_length}mm, total is {purge_len}mm.'
+  {% for n in range(iterations) %}
+    RESPOND TYPE=command MSG='BLOBIFIERv2: Purge Iteration {n} of {max_iteration_length}mm.'
+    G1 E{((25)*(n+1))} F{purge_spd}    # Purge 
+    M400 # Wait for the move to complete
+    M106 S255 # Part Cooling Fan On
+    G4 P1500 # Wait 1.5s
+    M106 S0 # Part Cooling Fan Off
+  {% endfor %}
+  RESPOND TYPE=command MSG='BLOBIFIERv2: Blobbing Now Complete.'
+
+  M106 S255 # Part Cooling Fan Back On
+  G4 P3000 # Wait 3 seconds to cool the blob
+  M106 S0 # Fan off to prevent blob from flying randomly
+
+  # Now Servo Stuff
+  RESPOND TYPE=command MSG='BLOBIFIERv2: Retract Servo'
+  G1 Y{purge_y + 50} F{travel_speed} # Move off the servo towards the wiper
+  SET_SERVO SERVO=blobs ANGLE=30 # Retract Servo
+  M400 # Wait for moves to complete
+  G4 P1500 # Wait a few seconds for servo move (MILLISECONDS)
+  G1 Y{purge_y} F{travel_speed} # Move back to the servo
+  
+  RESPOND TYPE=command MSG='BLOBIFIERv2: Restore fan speed and feedrate'
+  M106 S{(backup_fan_speed * 255)|int}
+
+  AFC_ENABLE_SKEW
+  RESPOND TYPE=command MSG='BLOBIFIERv2: Reset Servo'
+  SET_SERVO SERVO=blobs ANGLE=170 # Restore Servo to waiting position
+
+  RESTORE_GCODE_STATE NAME=_AFC_POOPING MOVE={1 if restore_position else 0}```
