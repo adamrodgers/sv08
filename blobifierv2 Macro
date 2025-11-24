@@ -1,4 +1,4 @@
-```[gcode_macro BLOBIFIERV2]
+[gcode_macro BLOBIFIERV2]
 description: Blob filament and hopefully kick it into the bucket.
 
 gcode:
@@ -36,6 +36,9 @@ gcode:
   # Forced Purge length 75mm, Length from top of cutter to bottom of nozzle
   {% set purge_len = 75 %}
   
+  # Z lift parameters - 1mm per 20mm extruded
+  {% set z_lift_per_iteration = 1.0 %}
+  
   G90
 
   AFC_DISABLE_SKEW
@@ -44,6 +47,9 @@ gcode:
   G1 X{purge_x} Y{purge_y} F{travel_speed}
   M400 # Wait for the move to complete
 
+  # Save current Z position
+  {% set start_z = printer.toolhead.position.z %}
+
   # Forced Max Purge Amount Is 25mm, making 3 blobs
   {% set max_iteration_length = 25 %}
   {% set iterations = (purge_len / max_iteration_length)|round(0, 'ceil')|int %}
@@ -51,7 +57,15 @@ gcode:
   RESPOND TYPE=command MSG='BLOBIFIERv2: Will Do {iterations} purges of {max_iteration_length}mm, total is {purge_len}mm.'
   {% for n in range(iterations) %}
     RESPOND TYPE=command MSG='BLOBIFIERv2: Purge Iteration {n} of {max_iteration_length}mm.'
-    G1 E{((25)*(n+1))} F{purge_spd}    # Purge 
+    
+    # Calculate Z position for this iteration (1mm lift per 20mm extruded = 1.25mm per 25mm iteration)
+    {% set target_z = start_z + (z_lift_per_iteration * (n + 1)) %}
+    
+    # Move Z up while extruding (relative mode for smoother motion)
+    G91  # Relative positioning
+    G1 Z{z_lift_per_iteration} E{max_iteration_length} F{purge_spd}  # Lift while extruding
+    G90  # Back to absolute positioning
+    
     M400 # Wait for the move to complete
     M106 S255 # Part Cooling Fan On
     G4 P1500 # Wait 1.5s
@@ -78,4 +92,4 @@ gcode:
   RESPOND TYPE=command MSG='BLOBIFIERv2: Reset Servo'
   SET_SERVO SERVO=blobs ANGLE=170 # Restore Servo to waiting position
 
-  RESTORE_GCODE_STATE NAME=_AFC_POOPING MOVE={1 if restore_position else 0}```
+  RESTORE_GCODE_STATE NAME=_AFC_POOPING MOVE={1 if restore_position else 0}
